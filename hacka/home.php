@@ -1,4 +1,3 @@
-
 <html>
 <head>
 	<title>Misys FusionExpRSS</title>
@@ -9,6 +8,15 @@
 <body>
 
 <?php
+	session_start();
+	require('connect.php');
+	
+	$id = "";
+	$status = "";
+	$productname1 = "";
+	$version1 = "";
+	$asperalink1 = "";
+	
 	$errorCount = 0;
 	$error_msg_version = "";
 	$error_msg_aspera = "";
@@ -28,16 +36,33 @@
 		}
 	}
 	
+	//if ($errorCount == 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
+	//	if (isset($_POST['btnSubmit'])) {
+	//		header("Location: //submit.php?product=".$product."&version=".$version."&asperaLink=".$asperaLink);
+//		}
+  //  }
+
+	$username = $_SESSION['username'];
+	$query = "SELECT * FROM `user` WHERE username='$username'";
+	$result = mysqli_query($connection, $query);
+
+	while ($row = mysqli_fetch_assoc($result)) {
+		$id = $row["id"];
+	}
+			
 	if ($errorCount == 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
 		if (isset($_POST['btnSubmit'])) {
-			header("Location: submit2.php?product=".$product."&version=".$version."&asperaLink=".$asperaLink);
 		}
-    }
+	}
 ?>
 
 <br><br><br><br><br>
 <div id = "page-wrap" class="roundedcorners">
-
+<?php
+	if (!(isset($_SESSION['login']) && $_SESSION['login'] != '')) {
+		header ("Location: login.php");
+	}
+?>
 <table cellpadding = "5px">
 	<tr>
 		<td>
@@ -80,7 +105,7 @@
 				<label class="tahoma">Version:</label>
 			</td>
 			<td/>
-			<td><input type="text" name="version" id="textfield" value="<?php echo $version; ?>"> 
+			<td><input type="text" name="version" id="textfield" value="<?php if (isset($_GET['version1'])) { echo $_GET['version1']; } else { echo $version; } ?>" maxLength = "10"> 			
 			<?php if ($error_msg_version != "") { ?>
 				<br><span class = "errortahoma"><?php echo $error_msg_version;?> </span></br>
 			<?php } ?>
@@ -91,7 +116,7 @@
 				<label class="tahoma">Aspera Link:</label>
 			</td>
 			<td/>
-			<td><input type="text" name="asperaLink" id="textfield" value="<?php echo $asperaLink; ?>">
+			<td><input type="text" name="asperaLink" id="textfield" value="<?php if (isset($_GET['asperaLink1'])) { echo $_GET['asperaLink1']; } else { echo $asperaLink; } ?>" maxLength = "50">
 			<?php if ($error_msg_aspera != "") { ?>
 				<br><span class = "errortahoma"><?php echo $error_msg_aspera;?> </span></br>
 			<?php } ?>
@@ -104,7 +129,7 @@
 				<input type="reset" name="btnClear" class="btn"/>
 			</td>
 			<td/><td/>
-			<td>
+			<td>	
 				<input type="submit" name="btnSubmit" class="btn"/>
 			</td>
 		</tr>
@@ -112,6 +137,88 @@
 </form>
 </div>
 
-</body>
+<table align="center" cellpadding = "2px">
+	<tr>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
+		<td>
+			<a href='logout.php' class="foottahoma">Logout</a>
+		</td>
+		<td>
+			<label class="foottahoma">| &copy; Team JaCaMYlu</label>
+		</td>
+	</tr>	
+</table>
 
+<br><br>
+
+<div id = "page-wrap-table">
+<form action="" method="post">
+	<?php
+		$query1 = mysqli_query($connection, "SELECT * FROM feed WHERE makerkey='$id' or checkerkey='$id'");
+		
+		echo '<table class="table1">';
+		$i = 0;
+		while($fetch = mysqli_fetch_assoc($query1)){
+			
+			$status = $fetch['status']; 
+			$checkerkey = $fetch['checkerkey'];
+			$makerkey = $fetch['makerkey'];
+			$xmlkey = $fetch['xmlkey'];
+			
+			if ($i == 0){
+				echo '<th class="th1">Product</th>';
+				echo '<th class="th1">Version</th>';
+				echo '<th class="th1">Status</th>';
+				echo '<th class="th1"></th>'; 
+				
+				$query2 = mysqli_query($connection, "SELECT * FROM xml WHERE xmlkey='$xmlkey'");
+				
+				echo '<th class="th1">'.$xmlkey.'</th>';
+				
+				
+				while($fetch = mysqli_fetch_assoc($query2)){
+					$productname1 = $fetch['productname']; 
+					$version1 = $fetch['version'];
+					$asperalink1 = $fetch['asperalink'];
+				}
+			}
+
+			echo '<tr><td class="td1"><div class="tahoma">'.$productname1.'</div></td>';		
+			echo '<td class="td1"><div class="tahoma">'.$version1.'</div></td>';	
+			
+			if ($status == 'R') {
+				$status_text = 'Rejected';
+				echo '<td class="td1"><div id="rejected" class="tahoma">'.$status_text.'</div></td>';
+				if ($makerkey == $id) {
+					echo '<td class="td1"><input type="submit" name="btnSubmitRejected[<?php $xmlkey ?>]" class="btn" value="Edit"/></td>';
+				}	
+			}
+			else if ($status == 'W') {
+				$status_text = 'Waiting for approval';
+				echo '<tr><td class="td1"><div id="waiting-for-approval" class="tahoma">'.$status_text.'</div></td>';   
+			}
+			else {
+				$status_text = 'Approved';
+				echo '<td class="td1"><div id="approved" class="tahoma">'.$status_text.'</div></td>';
+			}
+			
+			echo '</tr>';
+			$i++;
+		}
+		echo '</table>';
+		
+		$code = key($_POST['btnSubmitRejected']);
+		
+		if (isset($_POST['btnSubmitRejected'][$code])) {
+			header("Refresh: home.php?productname1=".$productname1."&version1=".$version1."&asperaLink1=".$asperalink1);
+		}
+	?>
+</form>
+</div>
+</body>
 </html>

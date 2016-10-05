@@ -2,17 +2,17 @@
 	session_start();
 	require('connect.php');
 
+	$fmsg = "";
+	
 	if (isset($_POST['username']) and isset($_POST['password'])){
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		$query = "SELECT * FROM `user` WHERE username='$username' and password='$password'";
 		$result = mysqli_query($connection, $query) or die(mysqli_error($connection));
 		$count = mysqli_num_rows($result);
-		$row = mysqli_fetch_assoc($result);
 
 		if ($count == 1){
 			$_SESSION['username'] = $username;
-			$_SESSION['superuser'] = $row['superuser'];
 		}
 		else{
 			$fmsg = "Invalid Login Credentials.";
@@ -52,7 +52,7 @@
 </table>
 
 <form action="" method="post">
-	<table cellpadding = "8px">
+	<table cellpadding = "6px">
 		<tr>
 			<td>
 				<label class="tahoma">Username:</label>
@@ -71,6 +71,13 @@
 				<input type="password" name="password" id="inputPassword" placeholder="Password required">
 			</td>
 		</tr>	
+		<tr>
+			<td>
+				<?php if ($fmsg != "") { ?>
+					<span class = "errortahoma"><?php echo $fmsg;?> </span>
+				<?php } ?>
+			</td>
+		</tr>
 	</table>
 	<table align="center" cellpadding = "5px">
 		<tr>

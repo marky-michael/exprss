@@ -5,6 +5,21 @@
     border: 5px solid #243A3A;
     padding: 20px 20px;
 }
+
+#page-wrap-table {
+    margin: auto;
+    width: 35%;
+	height: 40%;
+    padding: 20px 20px;
+}
+
+#page-wrap-login {
+    margin: auto;
+    width: 35%;
+	height: 30%;
+    border: 5px solid #243A3A;
+    padding: 20px 20px;
+}
 	
 #textfield {
 	border-style:solid;
@@ -12,6 +27,24 @@
 	border-width: 1px;
 	background-color:transparent;
 	width: 235px;
+}
+
+#approved {
+	background-color:#22C100;
+	color: #F8FFF7;
+	padding: 15px 10px;
+}
+
+#rejected {
+	background-color:#9C0000;
+	color: #F8FFF7;
+	padding: 15px 10px;
+}
+
+#waiting-for-approval {
+	background-color:#CE8400;
+	color: #F8FFF7;
+	padding: 15px 10px;
 }
 
 .helvetica {
@@ -32,6 +65,18 @@
 	line-height: 15.4px;
 }
 
+
+
+.foottahoma {
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 15.4px;
+	color: #3F4E4E;
+}
+
 .errortahoma {
 	font-family: Tahoma, Verdana, Segoe, sans-serif;
 	font-size: 10px;
@@ -50,6 +95,11 @@
     height: 150px;
 }
 
+.right {
+  text-align: right;
+  margin-right: 1em;
+}
+
 .btn {
   color: #ffffff;
   font-size: 12px;
@@ -63,3 +113,27 @@
   background: #60c6d1;
   text-decoration: none;
 }
+
+.table1 {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.th1 {
+    text-align: left;
+    padding: 8px;
+}
+
+.th1 {
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+    text-align: left;
+    padding: 8px;
+	background-color: #243A3A;
+    color: white;
+}
+
+.td1 {
+    text-align: left;
+    padding: 8px;
+}
+
