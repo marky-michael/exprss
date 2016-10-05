@@ -45,9 +45,11 @@
 	$username = $_SESSION['username'];
 	$query = "SELECT * FROM `user` WHERE username='$username'";
 	$result = mysqli_query($connection, $query);
+	$superuser = 0;
 
 	while ($row = mysqli_fetch_assoc($result)) {
 		$id = $row["id"];
+		$superuser = $row["superuser"];
 	}
 			
 	if ($errorCount == 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -146,8 +148,21 @@
 		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
 		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
 		<td>
-			<a href='logout.php' class="foottahoma">Logout</a>
+			<label class="foottahoma">Logged in as <?php echo $username ?></label>
 		</td>
+		<?php if ($superuser == 1) { ?>
+			<td class="foottahoma">
+				<label>(</label>
+				<a href='logout.php' class="foottahoma">Test</a>
+				<label> | </label>
+				<a href='logout.php' class="foottahoma">Logout</a>
+				<label>)</label>
+			</td>
+		<?php } else { ?>
+			<td>
+				<a href='logout.php' class="foottahoma">Logout</a>
+			</td>
+		<?php } ?>
 		<td>
 			<label class="foottahoma">| &copy; Team JaCaMYlu</label>
 		</td>
