@@ -1,0 +1,65 @@
+#page-wrap {
+    margin: auto;
+    width: 35%;
+	height: 40%;
+    border: 5px solid #243A3A;
+    padding: 20px 20px;
+}
+	
+#textfield {
+	border-style:solid;
+	border-color:#768080;
+	border-width: 1px;
+	background-color:transparent;
+	width: 235px;
+}
+
+.helvetica {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+.tahoma {
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 15.4px;
+}
+
+.errortahoma {
+	font-family: Tahoma, Verdana, Segoe, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 15.4px;
+	color: #FF0000;
+}
+
+.roundedcorners {
+	border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px; 
+    width: 200px;
+    height: 150px;
+}
+
+.btn {
+  color: #ffffff;
+  font-size: 12px;
+  background: #3b4247;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  border: 0;
+}
+
+.btn:hover {
+  background: #60c6d1;
+  text-decoration: none;
+}
