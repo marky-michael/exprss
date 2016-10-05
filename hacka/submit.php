@@ -18,6 +18,18 @@
 	$releaseDescriptionPreset = $product.' version '.$version.' is now released. 
 	Here is the the aspera link for this delivery :: ' . $asperaLink;
 	
+	
+	//Database connection
+	$dbLink = new mysqli('127.0.0.1', 'root', '', 'test');
+	
+	if(mysqli_connect_errno()) {
+            die("MySQL connection failed: ". mysqli_connect_error());
+    }
+	
+ 
+        
+	
+	// Append new items to existing XML
 	if( $xml = file_get_contents( $fileName ) ) {
 		$xmldoc->loadXML( $xml, LIBXML_NOBLANKS );
 		
@@ -40,7 +52,12 @@
 		$descriptionText = $xmldoc->createCDATASection($releaseDescriptionPreset.'&#13;&#10;<img src="http://localhost/hacka/images/MISYSLOGO2.png" alt=""  width="800" height="450"/>');
 		$descriptionElement->appendChild($descriptionText);
 		
-		$xmldoc->save( $fileName );
+		//$xmldoc->save( $fileName );
+		
+		$xmlString = $xmldoc->saveXML($xmldoc);
+		
+		
+ 
 		
 	}
 	else{
@@ -61,7 +78,34 @@
 		$xmldoc->loadXML($data);	
 	
 	
-		$xmldoc->save( $fileName );
+		//$xmldoc->save( $fileName );
+		
+		$xmlString = $xmldoc->saveXML($xmldoc);
 	}	
+	
+	// Create the SQL query
+        $query = "
+            INSERT INTO `xml` (
+                `data`, `productname`, `version`, `asperalink`
+            )
+            VALUES (
+                '{$xmlString}', '{$product}', '{$version}','{$asperaLink}'
+            )";
+	
+	 // Execute the query
+        $result = $dbLink->query($query);
+		
+		// Check if it was successfull
+        if($result) {
+            echo 'Success! Your file was successfully added!';
+        }
+        else {
+            echo 'Error! Failed to insert the file'
+               . "<pre>{$dbLink->error}</pre>";
+        }
+	
+		
+	
+		$dbLink->close();
 	
 ?>
