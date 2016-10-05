@@ -36,24 +36,17 @@
 		}
 	}
 	
-	//if ($errorCount == 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
-	//	if (isset($_POST['btnSubmit'])) {
-	//		header("Location: //submit.php?product=".$product."&version=".$version."&asperaLink=".$asperaLink);
-//		}
-  //  }
-
 	$username = $_SESSION['username'];
 	$query = "SELECT * FROM `user` WHERE username='$username'";
 	$result = mysqli_query($connection, $query);
-	$superuser = 0;
 
 	while ($row = mysqli_fetch_assoc($result)) {
 		$id = $row["id"];
-		$superuser = $row["superuser"];
 	}
 			
 	if ($errorCount == 0 && $_SERVER['REQUEST_METHOD'] === 'POST') {
 		if (isset($_POST['btnSubmit'])) {
+			header("Location: submit.php?product=".$product."&version=".$version."&asperaLink=".$asperaLink."xmlkey".$xmlkey1);
 		}
 	}
 ?>
@@ -106,7 +99,7 @@
 			<td>
 				<label class="tahoma">Version:</label>
 			</td>
-			<td/>
+			<td><input type="hidden" name="xmlkey" value="<?php { echo $version; } ?>"/></td>
 			<td><input type="text" name="version" id="textfield" value="<?php if (isset($_GET['version1'])) { echo $_GET['version1']; } else { echo $version; } ?>" maxLength = "10"> 			
 			<?php if ($error_msg_version != "") { ?>
 				<br><span class = "errortahoma"><?php echo $error_msg_version;?> </span></br>
@@ -118,7 +111,7 @@
 				<label class="tahoma">Aspera Link:</label>
 			</td>
 			<td/>
-			<td><input type="text" name="asperaLink" id="textfield" value="<?php if (isset($_GET['asperaLink1'])) { echo $_GET['asperaLink1']; } else { echo $asperaLink; } ?>" maxLength = "50">
+			<td><input type="text" name="asperaLink" id="textfield" value="<?php if (isset($_GET['asperalink1'])) { echo $_GET['asperalink1']; } else { echo $asperaLink; } ?>" maxLength = "50">
 			<?php if ($error_msg_aspera != "") { ?>
 				<br><span class = "errortahoma"><?php echo $error_msg_aspera;?> </span></br>
 			<?php } ?>
@@ -148,21 +141,8 @@
 		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
 		<td/><td/><td/><td/><td/><td/><td/><td/><td/>
 		<td>
-			<label class="foottahoma">Logged in as <?php echo $username ?></label>
+			<a href='logout.php' class="foottahoma">Logout</a>
 		</td>
-		<?php if ($superuser == 1) { ?>
-			<td class="foottahoma">
-				<label>(</label>
-				<a href='logout.php' class="foottahoma">Test</a>
-				<label> | </label>
-				<a href='logout.php' class="foottahoma">Logout</a>
-				<label>)</label>
-			</td>
-		<?php } else { ?>
-			<td>
-				<a href='logout.php' class="foottahoma">Logout</a>
-			</td>
-		<?php } ?>
 		<td>
 			<label class="foottahoma">| &copy; Team JaCaMYlu</label>
 		</td>
@@ -172,7 +152,6 @@
 <br><br>
 
 <div id = "page-wrap-table">
-<form action="" method="post">
 	<?php
 		$query1 = mysqli_query($connection, "SELECT * FROM feed WHERE makerkey='$id' or checkerkey='$id'");
 		
@@ -190,19 +169,17 @@
 				echo '<th class="th1">Version</th>';
 				echo '<th class="th1">Status</th>';
 				echo '<th class="th1"></th>'; 
-				
-				$query2 = mysqli_query($connection, "SELECT * FROM xml WHERE xmlkey='$xmlkey'");
-				
-				echo '<th class="th1">'.$xmlkey.'</th>';
-				
+			}
+
+			$query2 = mysqli_query($connection, "SELECT * FROM xml WHERE xmlkey='$xmlkey'");
 				
 				while($fetch = mysqli_fetch_assoc($query2)){
+					$xmlkey1 = $fetch['xmlkey'];
 					$productname1 = $fetch['productname']; 
 					$version1 = $fetch['version'];
 					$asperalink1 = $fetch['asperalink'];
 				}
-			}
-
+				
 			echo '<tr><td class="td1"><div class="tahoma">'.$productname1.'</div></td>';		
 			echo '<td class="td1"><div class="tahoma">'.$version1.'</div></td>';	
 			
@@ -210,7 +187,7 @@
 				$status_text = 'Rejected';
 				echo '<td class="td1"><div id="rejected" class="tahoma">'.$status_text.'</div></td>';
 				if ($makerkey == $id) {
-					echo '<td class="td1"><input type="submit" name="btnSubmitRejected[<?php $xmlkey ?>]" class="btn" value="Edit"/></td>';
+					echo '<td class="td1"><form action="home.php" method="get"><input type="hidden" name="productname1" value="'.$productname1.'"/><input type="hidden" name="version1" value="'.$version1.'"/><input type="hidden" name="asperalink1" value="'.$asperalink1.'"/><input type="hidden" name="xmlkey1" value="'.$xmlkey1.'"/><input type="submit" name="btnSubmitRejected" class="btn" value="Edit"/></form></td>';
 				}	
 			}
 			else if ($status == 'W') {
@@ -226,14 +203,7 @@
 			$i++;
 		}
 		echo '</table>';
-		
-		$code = key($_POST['btnSubmitRejected']);
-		
-		if (isset($_POST['btnSubmitRejected'][$code])) {
-			header("Refresh: home.php?productname1=".$productname1."&version1=".$version1."&asperaLink1=".$asperalink1);
-		}
 	?>
-</form>
 </div>
 </body>
 </html>
